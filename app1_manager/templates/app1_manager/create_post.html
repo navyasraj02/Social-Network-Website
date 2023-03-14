@@ -1,0 +1,16 @@
+{% extends "registration/base.html" %}
+
+{% block title %}Create Post{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<h2>Create Post</h2>
+<form method="post" enctype="multipart/form-data" action="">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="Create">
+</form>
+{% else %}
+<p>Please login to create a post.</p>
+{% endif %}
+{% endblock %}
