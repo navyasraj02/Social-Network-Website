@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import PostForm, SignUpForm
+from .forms import PostForm
 from app1_manager.models import Post
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.db import IntegrityError
 
 
 @login_required
-def create_post(request):
+def home(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         print(form)
@@ -32,19 +35,29 @@ def create_post(request):
 
 
 def signup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        print(form)
-        if form.is_valid():
-            user = form.save()
-            # login(request, user)
-            return redirect('app1_manager:post_list')
+    # GET - request resource from server & POST - submit data to server
+    if request.method == 'GET':
+        # UserCreationForm : built-in Django form used for user registration
+        return render(request, 'app1_manager/signup.html', {'form': UserCreationForm()})
     else:
-        form = SignUpForm()
-    return render(request, 'app1_manager/signup.html', {'form': form})
+        if request.POST['password1'] == request.POST['password2']:
+            try:
+                user = User.objects.create_user(
+                    request.POST['username'], password=request.POST['password1'])
+                user.save()
+                login(request, user)
+                return redirect('post_list')
+            except IntegrityError:
+                return render(request, 'app1_manager/signup.html',
+                              {'form': UserCreationForm(), 'error': 'That username has already been taken. Please '
+                                                                    'choose a new username'})
+
+        else:
+            return render(request, 'app1_manager/signup.html', {'form': UserCreationForm(), 'error': 'Passwords did not '
+                                                                'match'})
 
 
-def posts(request):
+def post_list(request):
     posts = Post.objects.all()
     return render(request, 'app1_manager/posts.html', {'posts': posts})
 
