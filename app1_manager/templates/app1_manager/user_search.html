@@ -11,7 +11,10 @@
 {% if results %}
 <ul>
     {% for user in results %}
-    <li><a href="{% url 'app1_manager:user_profile' user.id %}">{{ user.username }}</a></li>
+    <li><a href="{% url 'app1_manager:user_profile' user.id %}">{{ user.username }}</a>
+        <a class="btn btn-primary" href="#" role="button">Friend</a>
+        <a class="btn btn-primary" href="#" role="button">Unfriend</a>
+    </li>
     {% endfor %}
 </ul>
 {% else %}

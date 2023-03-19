@@ -11,6 +11,10 @@ from django.db import IntegrityError
 from django.contrib.auth import login, authenticate
 
 
+def home(request):
+    return render(request, 'app1_manager/home.html', {})
+
+
 @login_required
 def create_post(request):
     if request.method == 'POST':
@@ -48,7 +52,7 @@ def login(request):
                                                                'match'})
         else:
             login(request, user)
-            return redirect('app1_manager:post_list')
+            return redirect('app1_manager:create_post')
 
 
 def signup(request):

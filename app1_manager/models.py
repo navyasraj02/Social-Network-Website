@@ -14,11 +14,10 @@ class Post(models.Model):
 
 
 class CustomUser(AbstractUser):
-    # ... fields and methods ...
     location = models.CharField(max_length=100)
     groups = models.ManyToManyField(
         to='auth.Group',
-        related_name='custom_user_set',  # add a related_name
+        related_name='custom_user_set', 
         blank=True,
         verbose_name=_('groups'),
         help_text=_(
@@ -28,7 +27,7 @@ class CustomUser(AbstractUser):
     )
     user_permissions = models.ManyToManyField(
         to='auth.Permission',
-        related_name='custom_user_set',  # add a related_name
+        related_name='custom_user_set',
         blank=True,
         verbose_name=_('user permissions'),
         help_text=_('Specific permissions for this user.'),
